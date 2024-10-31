@@ -9,10 +9,6 @@ BALL_RADIUS = 200
 surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
 context = cairo.Context(surface)
 
-# White background
-context.set_source_rgb(1, 1, 1)
-context.paint()
-
 def draw_sphere(context, center_x, center_y, radius):
     """Draws the black 8-ball with a gradient for the 3D effect."""
     # 3D gradient for the ball
@@ -74,11 +70,30 @@ def draw_shadow(context, center_x, center_y, radius):
     context.arc(center_x, center_y + radius * 0.6, radius, 0, 2 * math.pi)
     context.fill()
 
+def draw_glow_background(context):
+    """Creates a glowing, sleek background."""
+    # Radial gradient for glowing background
+    gradient = cairo.RadialGradient(
+        WIDTH // 2, HEIGHT // 2, 100,  # Light center
+        WIDTH // 2, HEIGHT // 2, 300   # Fade out to edges
+    )
+    gradient.add_color_stop_rgb(0, 0.1, 0.1, 0.2)  # Cool blue at the center
+    gradient.add_color_stop_rgb(1, 0, 0, 0.1)      # Dark at the edges
+
+    context.set_source(gradient)
+    context.rectangle(0, 0, WIDTH, HEIGHT)
+    context.fill()
+
 # Draw shadow and 8-ball
+draw_glow_background(context)
 draw_shadow(context, WIDTH // 2, HEIGHT // 2, BALL_RADIUS)
 draw_sphere(context, WIDTH // 2, HEIGHT // 2, BALL_RADIUS)
 
 # Save the image
 surface.write_to_png("enhanced_3d_pool_ball.png")
 print("Enhanced 3D pool ball image created!")
+
+
+
+
 
